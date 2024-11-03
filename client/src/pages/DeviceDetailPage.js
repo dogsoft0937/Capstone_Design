@@ -8,6 +8,7 @@ import React from 'react';
 function DeviceDetailPage() {
     return (
         <div>
+            테스트 커밋
             
         </div>
     );
