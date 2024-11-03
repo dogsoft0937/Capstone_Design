@@ -1,6 +1,6 @@
-import { Port, PrismaClient } from "@prisma/client";
+// import { Port, PrismaClient } from "@prisma/client";
 
-const emptyPorts: Port[] = [
+const emptyPorts = [
     {
         id: "port001",
         portNumber: 1,

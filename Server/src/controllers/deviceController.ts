@@ -1,7 +1,7 @@
-import { Device, PrismaClient } from "@prisma/client";
+// import { Device, PrismaClient } from "@prisma/client";
 
 // const prisma = new PrismaClient();
-const emptyDevices: Device[] = [
+const emptyDevices = [
     {
         id: "device001",
         deviceName: "Router A",
@@ -24,10 +24,10 @@ const emptyDevices: Device[] = [
         lastChecked: new Date(),
     },
 ];
-export async function getAllDevices(): Promise<Device[]> {
+export async function getAllDevices() {
     return emptyDevices;
 }
-export async function getDeviceById(id: string): Promise<Device | null> {
+export async function getDeviceById(id: string) {
     const device = emptyDevices.find((device) => device.id === id);
     if (device) {
         return device;

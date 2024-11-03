@@ -1,8 +1,8 @@
-import { Event, PrismaClient } from "@prisma/client";
+// import { Event, PrismaClient } from "@prisma/client";
 
 // const prisma = new PrismaClient();
 
-const emptyEvents: Event[] = [
+const emptyEvents = [
     {
         id: "event001",
         eventType: "Error",

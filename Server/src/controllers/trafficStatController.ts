@@ -1,6 +1,6 @@
-import { PrismaClient, TrafficStat } from "@prisma/client";
+// import { PrismaClient, TrafficStat } from "@prisma/client";
 
-const emptyTrafficStats: TrafficStat[] = [
+const emptyTrafficStats = [
     {
         id: "traffic001",
         timestamp: new Date(),
