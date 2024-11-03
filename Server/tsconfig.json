@@ -1,0 +1,42 @@
+{
+    "compilerOptions": {
+        "resolveJsonModule": true, // JSON 모듈을 가져오도록 설정
+        "incremental": true,
+        "composite": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "rootDir": "./",
+        "moduleResolution": "node",
+        "baseUrl": "./",
+        "paths": {
+            "*": ["@types/*"],
+            "$repository/*": ["src/repository/*"],
+            "$util/*": ["src/api/util/*"],
+            "$utils/*": ["src/utils/*"],
+            "$service/*": ["src/service/*"],
+            "$error/*": ["src/error/*"],
+            "$api/*": ["src/api/*"],
+            "$loader/*": ["src/loader/*"],
+            "$middleware/*":["src/middleware/*"]
+        },
+        "typeRoots": [
+            "./node_modules/@types",
+            "./src/@types"
+        ],
+        "outDir": "./dist",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "skipDefaultLibCheck": true,
+        "skipLibCheck": true
+    },
+    "include": [
+        "src/**/*", // 모든 src 폴더 파일 포함
+        "src/config/swagger.json" // swagger.json 파일 포함
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "**/__mocks__/*" // swagger.json을 제외하지 않음
+    ]
+}

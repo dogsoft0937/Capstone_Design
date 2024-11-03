@@ -1,0 +1,47 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Device {
+    id          String   @id @default(cuid())
+    deviceName  String
+    deviceIP    String   @unique
+    status      String   // 예: "Online", "Offline"
+    lastChecked DateTime
+    ports       Port[]   // Device와 Port 간의 관계
+    trafficStat TrafficStat[]
+    event       Event[]
+}
+
+model Port {
+    id          String   @id @default(cuid())
+    portNumber  Int
+    portStatus  String   // 예: "Up", "Down"
+    traffic     String   // 예: "500KB/s"
+    errorCount  Int
+    deviceId    String
+    device      Device   @relation(fields: [deviceId], references: [id])
+}
+model TrafficStat {
+    id               String   @id @default(cuid())
+    timestamp        DateTime
+    inboundTraffic   String
+    outboundTraffic  String
+    deviceId         String
+    device           Device   @relation(fields: [deviceId], references: [id])
+}
+model Event {
+    id          String   @id @default(cuid())
+    eventType   String   // 예: "Error", "Normal"
+    severity     String   // 예: "Warning", "Info"
+    message      String
+    timestamp    DateTime
+    deviceId     String
+    device       Device   @relation(fields: [deviceId], references: [id])
+}
