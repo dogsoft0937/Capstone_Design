@@ -4,30 +4,30 @@
 
 const emptyEvents = [
     {
-        id: "event001",
-        eventType: "Error",
-        severity: "Critical",
-        message: "Port 1 down",
-        timestamp: new Date(),
-        deviceId: "device001",
+      "id": "event001",
+      "eventType": "Error",
+      "severity": "Critical",
+      "message": "Port 1 down",
+      "timestamp": "2024-11-06T07:18:20.338Z",
+      "deviceId": "device001"
     },
     {
-        id: "event002",
-        eventType: "Normal",
-        severity: "Info",
-        message: "All systems operational",
-        timestamp: new Date(),
-        deviceId: "device001",
+      "id": "event002",
+      "eventType": "Normal",
+      "severity": "Info",
+      "message": "All systems operational",
+      "timestamp": "2024-11-06T07:18:20.338Z",
+      "deviceId": "device001"
     },
     {
-        id: "event003",
-        eventType: "Error",
-        severity: "Warning",
-        message: "High latency detected",
-        timestamp: new Date(),
-        deviceId: "device002",
-    },
-];
+      "id": "event003",
+      "eventType": "Error",
+      "severity": "Warning",
+      "message": "High latency detected",
+      "timestamp": "2024-11-06T07:18:20.338Z",
+      "deviceId": "device002"
+    }
+  ];
 export async function getAllEvents() {
     return emptyEvents;
 }

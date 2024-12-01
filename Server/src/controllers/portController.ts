@@ -1,31 +1,31 @@
 // import { Port, PrismaClient } from "@prisma/client";
 
-const emptyPorts = [
+const emptyPorts =[
     {
-        id: "port001",
-        portNumber: 1,
-        portStatus: "Up",
-        traffic: "500KB/s",
-        errorCount: 0,
-        deviceId: "device001",
+      "id": "port001",
+      "portNumber": 1,
+      "portStatus": "Up",
+      "traffic": "500KB/s",
+      "errorCount": 0,
+      "deviceId": "device001"
     },
     {
-        id: "port002",
-        portNumber: 2,
-        portStatus: "Down",
-        traffic: "0KB/s",
-        errorCount: 1,
-        deviceId: "device001",
+      "id": "port002",
+      "portNumber": 2,
+      "portStatus": "Down",
+      "traffic": "0KB/s",
+      "errorCount": 1,
+      "deviceId": "device001"
     },
     {
-        id: "port003",
-        portNumber: 1,
-        portStatus: "Up",
-        traffic: "300KB/s",
-        errorCount: 0,
-        deviceId: "device002",
-    },
-];
+      "id": "port003",
+      "portNumber": 1,
+      "portStatus": "Up",
+      "traffic": "300KB/s",
+      "errorCount": 0,
+      "deviceId": "device002"
+    }
+  ];
 export async function getAllPorts() {
     return emptyPorts;
 }

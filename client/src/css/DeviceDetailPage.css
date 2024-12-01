@@ -1,0 +1,60 @@
+.device-detail-container {
+    max-width: 500px;
+    margin: 250px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.device-detail-title {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.device-info p {
+    font-size: 18px;
+    color: #555;
+    margin: 8px 0;
+}
+
+.device-info p strong {
+    color: #333;
+}
+
+.status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.status.online {
+    color: #388e3c;
+    background-color: #e8f5e9;
+}
+
+.status.offline {
+    color: #d32f2f;
+    background-color: #ffebee;
+}
+
+.back-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #3f51b5;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #303f9f;
+}

@@ -1,47 +1,134 @@
-/* 
-API: GET /api/devices/
-기능: 전체 장치의 목록을 표시합니다. 장치의 이름, IP, 상태 등의 간단한 정보만 나열합니다.
-예: 장치를 클릭하면 해당 장치의 상세 페이지로 이동.
-*/
-
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import Dashboard from "./Dashboard";
+import "../css/MainPage.css";
 
 function MainPage() {
-    const [devices, setDevices] = useState([]); // 장치 목록을 저장할 상태 변수
-    const [loading, setLoading] = useState(true); // 로딩 상태를 관리
+    const [devices, setDevices] = useState([]);
+    const [ports, setPorts] = useState([]);
+    const [trafficStats, setTrafficStats] = useState([]);
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [activeTab, setActiveTab] = useState(null); // 현재 활성화된 목록을 관리하는 상태
 
-    useEffect(() => {
-        // API 요청을 통해 장치 목록 가져오기
-        axios.get('http://172.30.1.38:2306/api/devices')
-            .then(response => {
-                setDevices(response.data); // 가져온 데이터로 상태 업데이트
-                setLoading(false); // 로딩 완료
+    const fetchData = (type) => {
+        if (activeTab === type) {
+            // 이미 활성화된 탭을 다시 누르면 비활성화
+            setActiveTab(null);
+            return;
+        }
+        setLoading(true);
+        let apiUrl = "";
+
+        switch (type) {
+            case "devices":
+                apiUrl = "http://127.0.0.1:2306/api/devices";
+                break;
+            case "ports":
+                apiUrl = "http://127.0.0.1:2306/api/ports";
+                break;
+            case "trafficStats":
+                apiUrl = "http://127.0.0.1:2306/api/trafficStats";
+                break;
+            case "events":
+                apiUrl = "http://127.0.0.1:2306/api/events";
+                break;
+            default:
+                return;
+        }
+
+        axios
+            .get(apiUrl)
+            .then((response) => {
+                switch (type) {
+                    case "devices":
+                        setDevices(response.data);
+                        break;
+                    case "ports":
+                        setPorts(response.data);
+                        break;
+                    case "trafficStats":
+                        setTrafficStats(response.data);
+                        break;
+                    case "events":
+                        setEvents(response.data);
+                        break;
+                    default:
+                        break;
+                }
+                setActiveTab(type);
+                setLoading(false);
             })
-            .catch(error => {
-                console.error('Error fetching device data:', error);
+            .catch((error) => {
+                console.error(`Error fetching ${type} data:`, error);
                 setLoading(false);
             });
-    }, []);
+    };
 
-    if (loading) return <p>Loading...</p>; // 로딩 중일 때 표시할 내용
+    const renderList = () => {
+        switch (activeTab) {
+            case "devices":
+                return devices.map((device) => (
+                    <div key={device.id} className="device-card">
+                        <Link to={`/devices/${device.id}`} className="device-link">
+                            <h2 className="device-name">{device.deviceName}</h2>
+                            <h2 className={`status ${device.status.toLowerCase()}`}>{device.status}</h2>
+                        </Link>
+                    </div>
+                ));
+            case "ports":
+                return ports.map((port) => (
+                    <div key={port.id} className="port-card">
+                        <Link to={`/ports/${port.id}`} className="device-link">
+                            <h2 className="device-name">{port.id}</h2>
+                            <h2 className={`status ${port.portStatus.toLowerCase()}`}>{port.portStatus}</h2>
+                        </Link>
+                    </div>
+                ));
+            case "trafficStats":
+                return trafficStats.map((stat, index) => (
+                    <div key={index} className="traffic-card">
+                        <Link to={`/trafficStats/${stat.id}`} className="device-link">
+                            <h2 className="device-name">{stat.id} </h2>
+                        </Link>
+                    </div>
+                ));
+            case "events":
+                return events.map((event) => (
+                    <div key={event.id} className="event-card">
+                        <Link to={`/events/${event.id}`} className="device-link">
+                            <h2 className="device-name">{event.id}</h2>
+                        </Link>
+                    </div>
+                ));
+            default:
+                return;
+        }
+    };
 
     return (
-        <div>
-            <h1>Device List Page</h1>
-            <ul>
-                {devices.map(device => (
-                    <li key={device.id}>
-                        {/* 장치 클릭 시 상세 페이지로 이동하도록 설정 */}
-                        <Link to={`/devices/${device.id}`}>
-                            {device.name} - {device.ip} - {device.status}
-                        </Link>
-                    </li>
-                ))}
-            </ul>
+        <div className="main-container">
+
+            {/* 상단 버튼 */}
+            <div className="button-group">
+                <button onClick={() => fetchData("devices")}>장치 목록</button>
+                <button onClick={() => fetchData("ports")}>포트 목록</button>
+                <button onClick={() => fetchData("trafficStats")}>트래픽 상태</button>
+                <button onClick={() => fetchData("events")}>이벤트 목록</button>
+            </div>
+
+            {/* 데이터 로딩 상태 */}
+            {loading ? (
+                <p>Loading...</p>
+            ) : (
+                <div className="data-list">{renderList()}</div>
+            )}
+
+            <Dashboard />
         </div>
     );
 }
 
 export default MainPage;
+

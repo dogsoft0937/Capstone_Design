@@ -3,27 +3,27 @@
 // const prisma = new PrismaClient();
 const emptyDevices = [
     {
-        id: "device001",
-        deviceName: "Router A",
-        deviceIP: "192.168.1.1",
-        status: "Online",
-        lastChecked: new Date(),
+      "id": "device001",
+      "deviceName": "Router A",
+      "deviceIP": "192.168.1.1",
+      "status": "Online",
+      "lastChecked": "2024-11-06T07:18:20.335Z"
     },
     {
-        id: "device002",
-        deviceName: "Switch B",
-        deviceIP: "192.168.1.2",
-        status: "Online",
-        lastChecked: new Date(),
+      "id": "device002",
+      "deviceName": "Switch B",
+      "deviceIP": "192.168.1.2",
+      "status": "Online",
+      "lastChecked": "2024-11-06T07:18:20.335Z"
     },
     {
-        id: "device003",
-        deviceName: "Access Point C",
-        deviceIP: "192.168.1.3",
-        status: "Offline",
-        lastChecked: new Date(),
-    },
-];
+      "id": "device003",
+      "deviceName": "Access Point C",
+      "deviceIP": "192.168.1.3",
+      "status": "Offline",
+      "lastChecked": "2024-11-06T07:18:20.335Z"
+    }
+  ];
 export async function getAllDevices() {
     return emptyDevices;
 }

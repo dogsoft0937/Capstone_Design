@@ -8,35 +8,62 @@ import axios from 'axios';
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function Dashboard() {
-    const [data, setData] = useState(null);
+    const [data, setData] = useState([]);
 
     useEffect(() => {
-       
+        // 웹소켓 연결 설정
+        const socket = new WebSocket('ws://127.0.0.1:8080'); // 실제 웹소켓 주소로 변경
 
-        axios.get('http://172.30.1.38:2306/api/devices')
-            .then((response) => {
-                console.log("초기 데이터:", response.data);
-            })
-            .catch((error) => {
-                console.error("API 요청 오류:", error);
-            });
+        // 웹소켓 연결이 열렸을 때
+        socket.onopen = () => {
+            console.log("웹소켓 연결 성공");
+            // 서버에 메시지 보내기 (필요한 경우)
+            socket.send(JSON.stringify({ message: '클라이언트에서 보낸 메시지입니다.' }));
+        };
 
+        // 서버로부터 메시지를 받을 때
+        socket.onmessage = (event) => {
+            console.log("서버로부터 받은 메시지:", event.data);
+            try {
+                // 받은 메시지를 JSON으로 파싱
+                const receivedData = JSON.parse(event.data);
+                setData(receivedData); // 받은 데이터를 상태에 설정
+            } catch (error) {
+                console.error("데이터 파싱 오류:", error);
+            }
+        };
+
+        // 연결이 종료되었을 때
+        socket.onclose = (event) => {
+            console.log("웹소켓 연결이 닫혔습니다:", event);
+        };
+
+        // 에러가 발생했을 때
+        socket.onerror = (event) => {
+            console.error("웹소켓 오류 발생:", event);
+        };
+
+        // 컴포넌트 언마운트 시 웹소켓 연결 종료
+        return () => socket.close();
         
     }, []);
 
-    if (!data) return <p>데이터 로딩 중...</p>;
+    if (!data || !data.deviceInfo) return <p>데이터 로딩 중...</p>;
 
     // 트래픽 데이터를 위한 차트 구성
-    const trafficData = {
+    const trafficData = data && data.trafficStats ? {
         labels: ['Inbound', 'Outbound'],
         datasets: [
             {
                 label: 'Traffic (MB)',
-                data: [data.trafficStats.inboundTraffic, data.trafficStats.outboundTraffic],
+                data: [
+                    parseInt(data.trafficStats.inboundTraffic.replace('MB', '')), // 'MB' 제거 후 숫자로 변환
+                    parseInt(data.trafficStats.outboundTraffic.replace('MB', ''))
+                ],
                 backgroundColor: ['#42a5f5', '#66bb6a']
             }
         ]
-    };
+    } : null;
 
     return (
         <div className="dashboard">
@@ -94,5 +121,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
-
 

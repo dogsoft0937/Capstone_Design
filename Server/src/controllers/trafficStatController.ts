@@ -2,20 +2,20 @@
 
 const emptyTrafficStats = [
     {
-        id: "traffic001",
-        timestamp: new Date(),
-        inboundTraffic: "100MB",
-        outboundTraffic: "50MB",
-        deviceId: "device001",
+      "id": "traffic001",
+      "timestamp": "2024-11-06T07:18:20.338Z",
+      "inboundTraffic": "100MB",
+      "outboundTraffic": "50MB",
+      "deviceId": "device001"
     },
     {
-        id: "traffic002",
-        timestamp: new Date(),
-        inboundTraffic: "150MB",
-        outboundTraffic: "80MB",
-        deviceId: "device002",
-    },
-];
+      "id": "traffic002",
+      "timestamp": "2024-11-06T07:18:20.338Z",
+      "inboundTraffic": "150MB",
+      "outboundTraffic": "80MB",
+      "deviceId": "device002"
+    }
+  ];
 export async function getAllTrafficStats() {
     return emptyTrafficStats;
 }
