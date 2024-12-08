@@ -1,8 +1,9 @@
 {
+    "type": "module",
     "scripts": {
         "build": "tsc",
-        "start": "node dist/src/app.js",
-        "swagger": "ts-node src/config/swagger.ts"
+        "start": "node src/app.js",
+        "swagger": "node src/config/swagger.ts"
     },
     "dependencies": {
         "@prisma/client": "^5.21.1",

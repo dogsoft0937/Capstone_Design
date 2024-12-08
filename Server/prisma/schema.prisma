@@ -9,39 +9,44 @@ datasource db {
 }
 
 model Device {
-    id          String   @id @default(cuid())
-    deviceName  String
-    deviceIP    String   @unique
-    status      String   // 예: "Online", "Offline"
-    lastChecked DateTime
-    ports       Port[]   // Device와 Port 간의 관계
-    trafficStat TrafficStat[]
-    event       Event[]
+    id           String       @id @default(cuid())
+    deviceName   String
+    deviceIP     String       @unique
+    status       String       // 예: "Online", "Offline"
+    lastChecked  DateTime
+    ports        Port[]
+    trafficStats TrafficStat[]
+    events       Event[]
 }
 
 model Port {
     id          String   @id @default(cuid())
     portNumber  Int
     portStatus  String   // 예: "Up", "Down"
-    traffic     String   // 예: "500KB/s"
     errorCount  Int
+    lastChecked DateTime @default(now())
     deviceId    String
     device      Device   @relation(fields: [deviceId], references: [id])
+    trafficStats TrafficStat[]
 }
+
 model TrafficStat {
     id               String   @id @default(cuid())
     timestamp        DateTime
-    inboundTraffic   String
-    outboundTraffic  String
+    inboundTraffic   BigInt   // Int에서 BigInt로 변경
+    outboundTraffic  BigInt   // Int에서 BigInt로 변경
+    portId           String
+    port             Port     @relation(fields: [portId], references: [id])
     deviceId         String
     device           Device   @relation(fields: [deviceId], references: [id])
 }
+
 model Event {
-    id          String   @id @default(cuid())
-    eventType   String   // 예: "Error", "Normal"
-    severity     String   // 예: "Warning", "Info"
-    message      String
-    timestamp    DateTime
-    deviceId     String
-    device       Device   @relation(fields: [deviceId], references: [id])
+    id        String   @id @default(cuid())
+    eventType String   // Normal, Warning, Error 등
+    severity  String   // Low, Medium, High 등
+    message   String   @db.Text  // VARCHAR 대신 TEXT 타입 사용
+    timestamp DateTime
+    deviceId  String
+    device    Device   @relation(fields: [deviceId], references: [id])
 }

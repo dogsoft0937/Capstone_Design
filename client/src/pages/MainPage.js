@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Dashboard from "./Dashboard";
@@ -10,12 +10,10 @@ function MainPage() {
     const [trafficStats, setTrafficStats] = useState([]);
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState(null); // 현재 활성화된 목록을 관리하는 상태
+    const [activeTab, setActiveTab] = useState("dashboard");
 
     const fetchData = (type) => {
         if (activeTab === type) {
-            // 이미 활성화된 탭을 다시 누르면 비활성화
-            setActiveTab(null);
             return;
         }
         setLoading(true);
@@ -23,23 +21,24 @@ function MainPage() {
 
         switch (type) {
             case "devices":
-                apiUrl = "http://127.0.0.1:2306/api/devices";
+                apiUrl = "http://localhost:2306/api/devices";
                 break;
             case "ports":
-                apiUrl = "http://127.0.0.1:2306/api/ports";
+                apiUrl = "http://localhost:2306/api/ports";
                 break;
             case "trafficStats":
-                apiUrl = "http://127.0.0.1:2306/api/trafficStats";
+                apiUrl = "http://localhost:2306/api/trafficStats";
                 break;
             case "events":
-                apiUrl = "http://127.0.0.1:2306/api/events";
+                apiUrl = "http://localhost:2306/api/events";
                 break;
             default:
+                setActiveTab(type);
+                setLoading(false);
                 return;
         }
 
-        axios
-            .get(apiUrl)
+        axios.get(apiUrl)
             .then((response) => {
                 switch (type) {
                     case "devices":
@@ -66,14 +65,39 @@ function MainPage() {
             });
     };
 
-    const renderList = () => {
+    const formatTrafficValue = (value) => {
+        if (!value) return "0 B";
+        
+        const num = Number(value);
+        
+        if (num >= 1000000000) {
+            return `${(num / 1000000000).toFixed(2)} GB`;
+        } else if (num >= 1000000) {
+            return `${(num / 1000000).toFixed(2)} MB`;
+        } else if (num >= 1000) {
+            return `${(num / 1000).toFixed(2)} KB`;
+        }
+        return `${num} B`;
+    };
+
+    const renderContent = () => {
+        if (activeTab === "dashboard") {
+            return <Dashboard />;
+        }
+
         switch (activeTab) {
             case "devices":
                 return devices.map((device) => (
                     <div key={device.id} className="device-card">
                         <Link to={`/devices/${device.id}`} className="device-link">
                             <h2 className="device-name">{device.deviceName}</h2>
-                            <h2 className={`status ${device.status.toLowerCase()}`}>{device.status}</h2>
+                            <h2 className={`status ${device.status.toLowerCase()}`}>
+                                {device.status}
+                            </h2>
+                            <p className="device-ip">{device.deviceIP}</p>
+                            <p className="last-checked">
+                                마지막 확인: {new Date(device.lastChecked).toLocaleString()}
+                            </p>
                         </Link>
                     </div>
                 ));
@@ -81,16 +105,24 @@ function MainPage() {
                 return ports.map((port) => (
                     <div key={port.id} className="port-card">
                         <Link to={`/ports/${port.id}`} className="device-link">
-                            <h2 className="device-name">{port.id}</h2>
-                            <h2 className={`status ${port.portStatus.toLowerCase()}`}>{port.portStatus}</h2>
+                            <h2 className="port-number">포트 {port.portNumber}</h2>
+                            <h2 className={`status ${port.portStatus.toLowerCase()}`}>
+                                {port.portStatus}
+                            </h2>
+                            <p className="error-count">오류 수: {port.errorCount}</p>
                         </Link>
                     </div>
                 ));
             case "trafficStats":
-                return trafficStats.map((stat, index) => (
-                    <div key={index} className="traffic-card">
+                return trafficStats.map((stat) => (
+                    <div key={stat.id} className="traffic-card">
                         <Link to={`/trafficStats/${stat.id}`} className="device-link">
-                            <h2 className="device-name">{stat.id} </h2>
+                            <h2 className="traffic-title">트래픽 통계</h2>
+                            <p>인바운드: {formatTrafficValue(stat.inboundTraffic.toString())}</p>
+                            <p>아웃바운드: {formatTrafficValue(stat.outboundTraffic.toString())}</p>
+                            <p className="timestamp">
+                                {new Date(stat.timestamp).toLocaleString()}
+                            </p>
                         </Link>
                     </div>
                 ));
@@ -98,34 +130,64 @@ function MainPage() {
                 return events.map((event) => (
                     <div key={event.id} className="event-card">
                         <Link to={`/events/${event.id}`} className="device-link">
-                            <h2 className="device-name">{event.id}</h2>
+                            <h2 className={`event-type ${event.severity.toLowerCase()}`}>
+                                {event.eventType}
+                            </h2>
+                            <p className="severity">{event.severity}</p>
+                            <p className="message">{event.message}</p>
+                            <p className="timestamp">
+                                {new Date(event.timestamp).toLocaleString()}
+                            </p>
                         </Link>
                     </div>
                 ));
             default:
-                return;
+                return null;
         }
     };
 
     return (
         <div className="main-container">
-
-            {/* 상단 버튼 */}
             <div className="button-group">
-                <button onClick={() => fetchData("devices")}>장치 목록</button>
-                <button onClick={() => fetchData("ports")}>포트 목록</button>
-                <button onClick={() => fetchData("trafficStats")}>트래픽 상태</button>
-                <button onClick={() => fetchData("events")}>이벤트 목록</button>
+                <button 
+                    onClick={() => setActiveTab("dashboard")}
+                    className={activeTab === "dashboard" ? "active" : ""}
+                >
+                    대시보드
+                </button>
+                <button 
+                    onClick={() => fetchData("devices")}
+                    className={activeTab === "devices" ? "active" : ""}
+                >
+                    장치 목록
+                </button>
+                <button 
+                    onClick={() => fetchData("ports")}
+                    className={activeTab === "ports" ? "active" : ""}
+                >
+                    포트 목록
+                </button>
+                <button 
+                    onClick={() => fetchData("trafficStats")}
+                    className={activeTab === "trafficStats" ? "active" : ""}
+                >
+                    트래픽 상태
+                </button>
+                <button 
+                    onClick={() => fetchData("events")}
+                    className={activeTab === "events" ? "active" : ""}
+                >
+                    이벤트 목록
+                </button>
             </div>
 
-            {/* 데이터 로딩 상태 */}
             {loading ? (
-                <p>Loading...</p>
+                <div className="loading">데이터를 불러오는 중...</div>
             ) : (
-                <div className="data-list">{renderList()}</div>
+                <div className="content-area">
+                    {renderContent()}
+                </div>
             )}
-
-            <Dashboard />
         </div>
     );
 }

@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@types/node": "^22.10.1"
+  },
+  "dependencies": {
+    "net-snmp": "^3.15.1",
+    "Server": "^1.0.0"
+  }
+}

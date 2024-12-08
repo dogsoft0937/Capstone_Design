@@ -1,60 +1,183 @@
 .device-detail-container {
-    max-width: 500px;
-    margin: 250px auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 .device-detail-title {
     text-align: center;
-    color: #333;
-    font-size: 24px;
-    margin-bottom: 20px;
+    color: #2c3e50;
+    font-size: 28px;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eef2f7;
+}
+
+.info-group {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+}
+
+.info-group h2 {
+    color: #2c3e50;
+    font-size: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .device-info p {
-    font-size: 18px;
-    color: #555;
-    margin: 8px 0;
+    font-size: 16px;
+    color: #4a5568;
+    margin: 12px 0;
+    display: flex;
+    align-items: center;
+    line-height: 1.6;
 }
 
 .device-info p strong {
-    color: #333;
+    color: #2d3748;
+    min-width: 120px;
+    margin-right: 10px;
 }
 
 .status {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-weight: bold;
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
 }
 
 .status.online {
-    color: #388e3c;
-    background-color: #e8f5e9;
+    color: #059669;
+    background-color: #d1fae5;
 }
 
 .status.offline {
-    color: #d32f2f;
-    background-color: #ffebee;
+    color: #dc2626;
+    background-color: #fee2e2;
+}
+
+.status.warning {
+    color: #d97706;
+    background-color: #fef3c7;
+}
+
+.ports-section, .events-section {
+    margin-top: 30px;
+}
+
+.ports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.port-card {
+    background-color: #f8fafc;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.events-list {
+    margin-top: 20px;
+}
+
+.event-card {
+    background-color: #f8fafc;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #e2e8f0;
+}
+
+.event-severity {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.event-severity.critical {
+    color: #dc2626;
+    background-color: #fee2e2;
+}
+
+.event-severity.warning {
+    color: #d97706;
+    background-color: #fef3c7;
+}
+
+.event-severity.info {
+    color: #2563eb;
+    background-color: #dbeafe;
 }
 
 .back-button {
     display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
+    margin-top: 30px;
+    padding: 12px 24px;
     font-size: 16px;
-    color: #fff;
-    background-color: #3f51b5;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #3b82f6;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .back-button:hover {
-    background-color: #303f9f;
+    background-color: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #4a5568;
+    font-size: 18px;
+}
+
+.error {
+    text-align: center;
+    padding: 40px;
+    color: #dc2626;
+    font-size: 18px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .device-detail-container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .ports-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .device-info p {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .device-info p strong {
+        margin-bottom: 5px;
+    }
 }

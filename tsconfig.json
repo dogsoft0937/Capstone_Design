@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "allowJs": true,
+    "noImplicitAny": false,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./Server/src/types"
+    ]
+  },
+  "include": [
+    "Server/src/**/*"
+  ]
+} 

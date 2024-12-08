@@ -1,53 +1,200 @@
 .event-detail-container {
-    padding: 20px;
-    max-width: 600px;
-    margin: 250px auto;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 .event-detail-title {
-    font-size: 24px;
-    margin-bottom: 20px;
     text-align: center;
+    color: #2c3e50;
+    font-size: 28px;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eef2f7;
 }
 
 .event-info {
+    margin-bottom: 30px;
+}
+
+.info-group {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.info-group h2, .info-group h3 {
+    color: #2c3e50;
+    font-size: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.event-info p {
     font-size: 16px;
-    line-height: 1.5;
-    margin-bottom: 20px;
+    color: #4a5568;
+    margin: 12px 0;
+    display: flex;
+    align-items: center;
+    line-height: 1.6;
+}
+
+.event-info p strong {
+    color: #2d3748;
+    min-width: 120px;
+    margin-right: 10px;
 }
 
 .severity {
-    font-weight: bold;
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-left: 10px;
 }
 
-.severity.warning {
-    color: orange;
+.severity-critical {
+    color: #dc2626;
+    background-color: #fee2e2;
 }
 
-.severity.info {
-    color: blue;
+.severity-warning {
+    color: #d97706;
+    background-color: #fef3c7;
 }
 
-.severity.error {
-    color: red;
+.severity-info {
+    color: #2563eb;
+    background-color: #dbeafe;
+}
+
+.device-status {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.device-status.online {
+    color: #059669;
+    background-color: #d1fae5;
+}
+
+.device-status.offline {
+    color: #dc2626;
+    background-color: #fee2e2;
+}
+
+.event-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.back-button, .acknowledge-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .back-button {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    background-color: #3b82f6;
 }
 
 .back-button:hover {
-    background-color: #0056b3;
+    background-color: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.acknowledge-button {
+    background-color: #10b981;
+}
+
+.acknowledge-button:hover {
+    background-color: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.view-device-button {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #3b82f6;
+    background-color: #ffffff;
+    border: 2px solid #3b82f6;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.view-device-button:hover {
+    color: #ffffff;
+    background-color: #3b82f6;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #4a5568;
+    font-size: 18px;
+}
+
+.error {
+    text-align: center;
+    padding: 40px;
+    color: #dc2626;
+    font-size: 18px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .event-detail-container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .event-info p {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .event-info p strong {
+        margin-bottom: 5px;
+    }
+
+    .event-actions {
+        flex-direction: column;
+    }
+
+    .event-actions button {
+        width: 100%;
+    }
+
+    .severity {
+        margin-left: 0;
+        margin-top: 5px;
+    }
 }
