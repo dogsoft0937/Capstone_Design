@@ -2,6 +2,12 @@ import snmp from 'net-snmp';
 import prisma from '../lib/prisma.js';
 import os from 'os';
 import { broadcastTrap } from './websocketService.js';
+import Redis from 'ioredis';
+
+const redis = new Redis({
+    host: process.env.REDIS_HOST || 'localhost',
+    port: process.env.REDIS_PORT || 6379,
+});
 
 // 현재 네트워크 IP와 서브넷 찾기
 const getLocalNetwork = () => {
@@ -187,6 +193,10 @@ const pollDevice = async (deviceIP) => {
                         }
                     });
 
+                    // 디바이스 캐시 삭제
+                    await redis.del('all_devices');
+                    await redis.del(`device:${device.id}`);
+
                     // 포트 정보 수집
                     const ifNumber = varbinds[2]?.value || 1;
                     for (let portNum = 1; portNum <= ifNumber; portNum++) {
@@ -217,8 +227,12 @@ const pollDevice = async (deviceIP) => {
                                     }
                                 });
 
+                                // 트트 캐시 삭제
+                                await redis.del('all_ports');
+                                await redis.del(`port:${port.id}`);
+
                                 // 트래픽 통계 저장
-                                await prisma.trafficStat.create({
+                                const trafficStat = await prisma.trafficStat.create({
                                     data: {
                                         timestamp: new Date(),
                                         inboundTraffic: BigInt(portVarbinds[2]?.value || "0"),
@@ -227,12 +241,16 @@ const pollDevice = async (deviceIP) => {
                                         deviceId: device.id
                                     }
                                 });
+
+                                // 트래픽 통계 캐시 삭제
+                                await redis.del('all_traffic_stats');
+                                await redis.del(`traffic_stat:${trafficStat.id}`);
                             }
                         });
                     }
 
                     // 이벤트 생성
-                    await prisma.event.create({
+                    const event = await prisma.event.create({
                         data: {
                             eventType: "Normal",
                             severity: "Info",
@@ -241,6 +259,10 @@ const pollDevice = async (deviceIP) => {
                             deviceId: device.id
                         }
                     });
+
+                    // 이벤트 캐시 삭제
+                    await redis.del('all_events');
+                    await redis.del(`event:${event.id}`);
 
                     session.close();
                     resolve();
@@ -274,6 +296,10 @@ async function handleTrap(deviceIP, varbinds) {
             }
         });
 
+        // 디바이스 캐시 삭제
+        await redis.del('all_devices');
+        await redis.del(`device:${device.id}`);
+
         // varbinds 처리
         for (const vb of varbinds) {
             console.log('OID:', vb.oid);
@@ -282,7 +308,7 @@ async function handleTrap(deviceIP, varbinds) {
             // 포트 상태 변경 처리
             if (vb.oid.startsWith('1.3.6.1.2.1.2.2.1.8.')) {
                 const portNumber = parseInt(vb.oid.split('.').pop());
-                await prisma.port.upsert({
+                const port = await prisma.port.upsert({
                     where: {
                         id: `${device.id}-${portNumber}`
                     },
@@ -297,11 +323,15 @@ async function handleTrap(deviceIP, varbinds) {
                         errorCount: 0
                     }
                 });
+
+                // 포트 캐시 삭제
+                await redis.del('all_ports');
+                await redis.del(`port:${port.id}`);
             }
         }
 
         // 이벤트 생성
-        await prisma.event.create({
+        const event = await prisma.event.create({
             data: {
                 eventType: 'Trap',
                 severity: 'Warning',
@@ -310,6 +340,10 @@ async function handleTrap(deviceIP, varbinds) {
                 deviceId: device.id
             }
         });
+
+        // 이벤트 캐시 삭제
+        await redis.del('all_events');
+        await redis.del(`event:${event.id}`);
 
         console.log('트랩 처리 완료');
         
